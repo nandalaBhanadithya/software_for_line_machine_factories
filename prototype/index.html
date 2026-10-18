@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KarkhanaOS — Vardhan Steelware (Solutions Sprint Prototype)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#2563eb',
+              600: '#1d4ed8',
+              700: '#1e40af',
+              900: '#0f172a',
+            },
+            factory: {
+              yellow: '#f59e0b',
+              green: '#10b981',
+              red: '#ef4444',
+              steel: '#475569',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .tab-active { border-bottom: 3px solid #2563eb; color: #1d4ed8; font-weight: 700; }
+    .badge-hold { background-color: #fee2e2; color: #991b1b; border: 1px solid #f87171; }
+    .badge-polish { background-color: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+    .badge-ready { background-color: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+    .badge-done { background-color: #e0e7ff; color: #3730a3; border: 1px solid #a5b4fc; }
+    /* Mobile frame styling */
+    .mobile-screen {
+      max-width: 440px;
+      margin: 0 auto;
+      border-radius: 28px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      border: 8px solid #1e293b;
+      min-height: 840px;
+      background: #f8fafc;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-800 antialiased min-h-screen">
+
+  <!-- Top App Navigation & Prototype Header -->
+  <header class="bg-slate-950 border-b border-slate-800 sticky top-0 z-50 px-4 py-3 text-white">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center font-bold text-white shadow-lg">
+          V
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-extrabold text-base md:text-lg tracking-tight text-white">KarkhanaOS</h1>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono tracking-wide bg-blue-500/20 text-blue-300 border border-blue-500/30">Vardhan Steelware</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono tracking-wide bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Phase 1 Live Prototype</span>
+          </div>
+          <p class="text-xs text-slate-400">Jagadhri Works · Solving the "Maal Kahan Atka Hai" Bottleneck</p>
+        </div>
+      </div>
+
+      <!-- Persona / Role Selector Switches -->
+      <div class="flex items-center bg-slate-900 p-1.5 rounded-xl border border-slate-800 gap-1 overflow-x-auto">
+        <span class="text-xs text-slate-400 font-medium px-2 hidden lg:inline">View As:</span>
+        <button onclick="setRole('suresh')" id="role-btn-suresh" class="role-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 bg-blue-600 text-white shadow">
+          <i data-lucide="crown" class="w-3.5 h-3.5"></i>
+          <span>Suresh (Owner)</span>
+        </button>
+        <button onclick="setRole('ramesh')" id="role-btn-ramesh" class="role-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white transition-all flex items-center gap-1.5">
+          <i data-lucide="truck" class="w-3.5 h-3.5"></i>
+          <span>Ramesh (Floor)</span>
+        </button>
+        <button onclick="setRole('kunal')" id="role-btn-kunal" class="role-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white transition-all flex items-center gap-1.5">
+          <i data-lucide="file-plus-2" class="w-3.5 h-3.5"></i>
+          <span>Kunal (Sales/Intake)</span>
+        </button>
+        <button onclick="setRole('munshi')" id="role-btn-munshi" class="role-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white transition-all flex items-center gap-1.5">
+          <i data-lucide="scale" class="w-3.5 h-3.5"></i>
+          <span>Munshi Ji (Job-Work)</span>
+        </button>
+      </div>
+
+      <!-- View Toggle Mode: Desktop Board vs Mobile Simulator -->
+      <div class="flex items-center gap-2">
+        <button onclick="toggleDeviceMode()" id="device-toggle-btn" class="text-xs font-medium px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 flex items-center gap-1.5 transition">
+          <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
+          <span id="device-toggle-label">Mobile Simulator</span>
+        </button>
+        <button onclick="resetMockData()" title="Reset data to original client state" class="p-1.5 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg border border-slate-700 transition">
+          <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Context Banner Highlighting Client Requirements -->
+  <div class="bg-gradient-to-r from-amber-950/60 via-slate-900 to-blue-950/60 border-b border-slate-800 py-2 px-4 text-xs text-slate-300">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+        <span class="font-semibold text-amber-300" id="context-banner-title">Suresh's Morning Cockpit:</span>
+        <span id="context-banner-desc">Live visibility of Diwali orders, outside polishers, and overdue credit holds without calling Ramesh.</span>
+      </div>
+      <div class="text-[11px] text-slate-400 font-mono">
+        Diwali Rush Target: 140+ Orders | Active In-Flight: <span class="text-white font-bold" id="badge-active-count">24</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="py-6 px-3 md:px-6 max-w-7xl mx-auto">
+
+    <!-- DESKTOP / EXPANDED VIEW CONTAINER -->
+    <div id="desktop-container" class="space-y-6">
+
+      <!-- ============================================== -->
+      <!-- VIEW 1: SURESH VARDHAN (OWNER'S MORNING COCKPIT) -->
+      <!-- ============================================== -->
+      <section id="view-suresh" class="role-view space-y-6">
+        
+        <!-- Welcome Card with Immediate Action Alerts -->
+        <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 rounded-2xl p-5 md:p-6 text-white shadow-xl relative overflow-hidden">
+          <div class="absolute -right-10 -bottom-10 w-60 h-60 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-1">
+                <i data-lucide="sun" class="w-4 h-4 text-amber-400"></i> Morning 8:00 AM Factory Briefing
+              </div>
+              <h2 class="text-xl md:text-2xl font-extrabold tracking-tight">Namaste Suresh ji, Jagadhri Plant Live Status</h2>
+              <p class="text-slate-400 text-xs md:text-sm mt-1">Zero phone calls needed to Ramesh today. Here is where your production and money stand right now:</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-2 text-right">
+                <div class="text-xs text-red-400 font-medium">Overdue Payment Holds</div>
+                <div class="text-lg font-black text-red-400 font-mono">₹1,80,000</div>
+              </div>
+              <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl px-4 py-2 text-right">
+                <div class="text-xs text-amber-400 font-medium">Stuck in Polishing</div>
+                <div class="text-lg font-black text-amber-400 font-mono" id="stat-stuck-polish">4 Parties</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- THE 3 MORNING REPORTS (Section 7 of PRD) -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            
+            <!-- Report 1: Kahan Atka Hai (WIP Bottlenecks) -->
+            <div class="bg-slate-800/80 rounded-xl p-4 border border-slate-700/80 hover:border-blue-500/50 transition">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <div class="p-2 rounded-lg bg-amber-500/20 text-amber-400">
+                    <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-bold text-white">1. Kahan Atka Hai?</h3>
+                    <p class="text-[11px] text-slate-400">WIP Floor & Polishing Bottlenecks</p>
+                  </div>
+                </div>
+                <span class="text-xs px-2 py-0.5 rounded bg-amber-400/10 text-amber-400 font-mono font-bold" id="card-at-polish-count">6 Lots</span>
+              </div>
+              <ul class="text-xs space-y-2 text-slate-300">
+                <li class="flex items-center justify-between pb-1.5 border-b border-slate-700">
+                  <span>Bansal & Sons (120 Tope No.6)</span>
+                  <span class="font-mono text-amber-400 font-semibold">At Ramu Polisher</span>
+                </li>
+                <li class="flex items-center justify-between pb-1.5 border-b border-slate-700">
+                  <span>New Delhi Steel (60 Bhagona 8L)</span>
+                  <span class="font-mono text-amber-400 font-semibold">At Pappu Karigar</span>
+                </li>
+                <li class="flex items-center justify-between">
+                  <span>Mehra Kitchen (120 Kadai balance)</span>
+                  <span class="font-mono text-blue-400 font-semibold">In Stamping</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Report 2: Diwali Priority Commitments -->
+            <div class="bg-slate-800/80 rounded-xl p-4 border border-slate-700/80 hover:border-emerald-500/50 transition">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <div class="p-2 rounded-lg bg-emerald-500/20 text-emerald-400">
+                    <i data-lucide="calendar-clock" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-bold text-white">2. Diwali Dispatch Target</h3>
+                    <p class="text-[11px] text-slate-400">Next 48 Hours Commitments</p>
+                  </div>
+                </div>
+                <span class="text-xs px-2 py-0.5 rounded bg-emerald-400/10 text-emerald-400 font-mono font-bold">Today</span>
+              </div>
+              <ul class="text-xs space-y-2 text-slate-300">
+                <li class="flex items-center justify-between pb-1.5 border-b border-slate-700">
+                  <span class="truncate">Verma Utensils (40 Doz Thali)</span>
+                  <span class="text-emerald-400 font-bold">100% Packed</span>
+                </li>
+                <li class="flex items-center justify-between pb-1.5 border-b border-slate-700">
+                  <span class="truncate">Gupta Traders (25 Sets Patila)</span>
+                  <span class="text-emerald-400 font-bold">Tempo Ready</span>
+                </li>
+                <li class="flex items-center justify-between">
+                  <span class="truncate">Amazon (8 Sets Dinner 24pc)</span>
+                  <span class="text-indigo-400 font-bold">Courier Slips Ready</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Report 3: Party Dues vs Dispatch Radar -->
+            <div class="bg-slate-800/80 rounded-xl p-4 border border-slate-700/80 hover:border-red-500/50 transition">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <div class="p-2 rounded-lg bg-red-500/20 text-red-400">
+                    <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-bold text-white">3. Credit Hold Radar</h3>
+                    <p class="text-[11px] text-slate-400">Orders Blocked from Dispatch</p>
+                  </div>
+                </div>
+                <span class="text-xs px-2 py-0.5 rounded bg-red-400/10 text-red-400 font-mono font-bold">Action Needed</span>
+              </div>
+              <div class="p-3 bg-red-950/40 border border-red-800/50 rounded-lg text-xs space-y-1.5">
+                <div class="flex justify-between items-center text-red-300 font-bold">
+                  <span>Sharma Bartan Bhandar (Karnal)</span>
+                  <span class="font-mono text-red-400">Dues: ₹1,80,000</span>
+                </div>
+                <p class="text-[11px] text-slate-400">Holding 30 Doz Gilas (Ready). Sharmaji texted on WhatsApp: "Diwali ka maal hai jaldi bhejo".</p>
+                <div class="flex gap-2 pt-1">
+                  <button onclick="approveCredit('sharma')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded text-[11px] transition">
+                    Override & Allow Dispatch
+                  </button>
+                  <button onclick="openWhatsAppChat('sharma')" class="px-2.5 py-1 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded text-[11px] transition">
+                    Send Payment Reminder
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Master Order Search & Live Pipeline -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+            <div>
+              <h3 class="font-bold text-base text-white flex items-center gap-2">
+                <i data-lucide="search" class="w-4 h-4 text-blue-400"></i> Fast Party / Order Lookup
+              </h3>
+              <p class="text-xs text-slate-400">Search any distributor when they call Suresh on mobile.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="relative w-full md:w-80">
+                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+                <input type="text" id="suresh-search-input" onkeyup="filterOrdersTable()" placeholder="Search 'Sharma', 'Kadai', 'Panipat'..." class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-4 py-2 text-xs text-white focus:outline-none focus:border-blue-500 placeholder-slate-500">
+              </div>
+              <select id="filter-status-select" onchange="filterOrdersTable()" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-blue-500">
+                <option value="ALL">All Statuses</option>
+                <option value="HOLD">Hold (Payment)</option>
+                <option value="POLISH">In Polishing</option>
+                <option value="READY">Ready / Partial</option>
+                <option value="DISPATCHED">Dispatched</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Orders Table -->
+          <div class="overflow-x-auto mt-4 custom-scroll">
+            <table class="w-full text-left text-xs text-slate-300" id="orders-table">
+              <thead class="bg-slate-950 text-slate-400 font-semibold uppercase text-[10px] tracking-wider border-b border-slate-800">
+                <tr>
+                  <th class="py-3 px-3">Date</th>
+                  <th class="py-3 px-3">Party / Distributor</th>
+                  <th class="py-3 px-3">Item Description</th>
+                  <th class="py-3 px-3">Qty & Unit</th>
+                  <th class="py-3 px-3">Rate</th>
+                  <th class="py-3 px-3">Current Location / Stage</th>
+                  <th class="py-3 px-3">Payment / Risk</th>
+                  <th class="py-3 px-3 text-right">Quick Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800" id="orders-tbody">
+                <!-- Dynamically populated by JS from Vardhan dataset -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============================================== -->
+      <!-- VIEW 2: RAMESH (FLOOR & DISPATCH IN-CHARGE)    -->
+      <!-- ============================================== -->
+      <section id="view-ramesh" class="role-view hidden space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 text-white">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-1 rounded bg-amber-500/20 text-amber-400 font-mono text-xs font-bold uppercase">Ramesh Floor View</span>
+                <h2 class="text-lg md:text-xl font-bold">Jagadhri Factory Floor & Dispatch Hub</h2>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">Designed for quick 1-tap mobile updates. Replaces the pocket diary without typing.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-xs">
+                <span class="text-slate-400">Today's Dispatches: </span>
+                <span class="font-bold text-emerald-400 font-mono" id="ramesh-disp-count">4 Tempos Loaded</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Stage Tabs for Ramesh -->
+          <div class="flex border-b border-slate-800 mt-4 gap-4 text-xs font-semibold">
+            <button onclick="setRameshTab('dispatch')" id="rtab-dispatch" class="pb-3 text-blue-400 border-b-2 border-blue-500 flex items-center gap-1.5">
+              <i data-lucide="truck" class="w-4 h-4"></i> Ready for Loading & Dispatch (<span id="count-ready-tab">5</span>)
+            </button>
+            <button onclick="setRameshTab('polish')" id="rtab-polish" class="pb-3 text-slate-400 hover:text-white flex items-center gap-1.5">
+              <i data-lucide="sparkles" class="w-4 h-4"></i> Outside Polishing Queue (<span id="count-polish-tab">4</span>)
+            </button>
+            <button onclick="setRameshTab('hold')" id="rtab-hold" class="pb-3 text-slate-400 hover:text-white flex items-center gap-1.5">
+              <i data-lucide="ban" class="w-4 h-4 text-red-400"></i> Payment Hold: Maal Mat Bhejna (<span id="count-hold-tab">2</span>)
+            </button>
+          </div>
+
+          <!-- Ramesh's Interactive Action Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-5" id="ramesh-cards-container">
+            <!-- Dynamically rendered by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- VIEW 3: KUNAL VARDHAN (ORDER INTAKE & DEDUPLICATION) -->
+      <!-- ============================================== -->
+      <section id="view-kunal" class="role-view hidden space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Order Entry Form (Replaces Google Sheet) -->
+          <div class="lg:col-span-1 bg-slate-900 border border-slate-800 rounded-2xl p-5 text-white">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+              <div>
+                <h3 class="font-bold text-sm text-white flex items-center gap-2">
+                  <i data-lucide="file-plus" class="w-4 h-4 text-blue-400"></i> New Order Intake Form
+                </h3>
+                <p class="text-[11px] text-slate-400">Replaces messy Google Sheet with validation</p>
+              </div>
+              <span class="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded font-mono">Clean Intake</span>
+            </div>
+
+            <!-- Intelligent Duplicate Warning Banner -->
+            <div id="duplicate-warning-banner" class="hidden mb-4 p-3 bg-amber-950/70 border border-amber-600/70 rounded-xl text-xs text-amber-200">
+              <div class="flex items-start gap-2">
+                <i data-lucide="alert-circle" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
+                <div>
+                  <span class="font-bold">⚠️ Duplicate Order Alert!</span>
+                  <p class="text-[11px] text-amber-300/90 mt-0.5" id="duplicate-warning-text">Gupta Traders already ordered Kadai No.10 on 01-Sep!</p>
+                </div>
+              </div>
+            </div>
+
+            <form id="order-entry-form" onsubmit="handleNewOrderSubmit(event)" class="space-y-3 text-xs">
+              <div>
+                <label class="block text-slate-400 font-medium mb-1">Distributor / Party Name *</label>
+                <input type="text" id="order-party" list="parties-list" oninput="checkDuplicateOrder()" required placeholder="e.g. Gupta Traders Ambala" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
+                <datalist id="parties-list">
+                  <option value="Gupta Traders Ambala"></option>
+                  <option value="Sharma Bartan Bhandar Karnal"></option>
+                  <option value="Bansal & Sons Rohtak"></option>
+                  <option value="Jain Crockery Panipat"></option>
+                  <option value="New Delhi Steel House"></option>
+                  <option value="Mehra Kitchenware Jalandhar"></option>
+                  <option value="Verma Utensils Sonipat"></option>
+                  <option value="Online - Amazon"></option>
+                  <option value="Online - Flipkart"></option>
+                </datalist>
+              </div>
+
+              <div>
+                <label class="block text-slate-400 font-medium mb-1">Product SKU *</label>
+                <select id="order-item" onchange="checkDuplicateOrder()" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
+                  <option value="">-- Select Master SKU --</option>
+                  <option value="Kadai No.10">Kadai No.10 (Standard SS)</option>
+                  <option value="Patila set 5pc">Patila set 5pc (Heavy Gauge)</option>
+                  <option value="Thali 12 inch">Thali 12 inch (Laser Mirror Finish)</option>
+                  <option value="Gilas 300ml">Gilas 300ml (Embossed Floral)</option>
+                  <option value="Bhagona 8L">Bhagona 8L (Deep Vessel)</option>
+                  <option value="Tope No.6">Tope No.6 (Flat Bottom)</option>
+                  <option value="Dinner set 24pc">Dinner set 24pc (Gift Box)</option>
+                </select>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-slate-400 font-medium mb-1">Quantity *</label>
+                  <input type="number" id="order-qty" required min="1" placeholder="e.g. 200" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                  <label class="block text-slate-400 font-medium mb-1">Unit *</label>
+                  <select id="order-unit" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
+                    <option value="pcs">Pieces (pcs)</option>
+                    <option value="dozen">Dozen</option>
+                    <option value="set">Sets</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-slate-400 font-medium mb-1">Rate (₹) *</label>
+                  <input type="number" id="order-rate" required min="1" placeholder="e.g. 185" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                  <label class="block text-slate-400 font-medium mb-1">Channel Source</label>
+                  <select id="order-channel" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
+                    <option value="B2B Wholesale">B2B Wholesale (Distributor)</option>
+                    <option value="Amazon">Amazon B2C</option>
+                    <option value="Flipkart">Flipkart B2C</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-slate-400 font-medium mb-1">Remarks / Diwali Urgency</label>
+                <input type="text" id="order-remarks" placeholder="e.g. Diwali season urgent dispatch" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
+              </div>
+
+              <button type="submit" class="w-full mt-2 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i> Add to Factory Pipeline
+              </button>
+            </form>
+          </div>
+
+          <!-- Recent Ingested Orders & Duplication Audit Log -->
+          <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-5 text-white">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+              <div>
+                <h3 class="font-bold text-sm text-white">Kunal's Order Ledger (Sanitized & Standardized)</h3>
+                <p class="text-[11px] text-slate-400">Google Sheet flaws automatically sanitized (Units locked, party names verified)</p>
+              </div>
+              <button onclick="exportToCSV()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 border border-slate-700 rounded-lg flex items-center gap-1.5 transition">
+                <i data-lucide="download" class="w-3.5 h-3.5"></i> Export Clean CSV for Tally
+              </button>
+            </div>
+
+            <div class="overflow-x-auto custom-scroll">
+              <table class="w-full text-left text-xs text-slate-300">
+                <thead class="bg-slate-950 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+                  <tr>
+                    <th class="py-2.5 px-3">Date</th>
+                    <th class="py-2.5 px-3">Party Name</th>
+                    <th class="py-2.5 px-3">Item</th>
+                    <th class="py-2.5 px-3">Qty</th>
+                    <th class="py-2.5 px-3">Amount</th>
+                    <th class="py-2.5 px-3">Channel</th>
+                    <th class="py-2.5 px-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800 font-mono text-[11px]" id="kunal-table-body">
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- VIEW 4: MUNSHI JI (ACCOUNTS & KARIGAR LEDGER)  -->
+      <!-- ============================================== -->
+      <section id="view-munshi" class="role-view hidden space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Outside Polishing Jobwork Reconciler -->
+          <div class="lg:col-span-1 bg-slate-900 border border-slate-800 rounded-2xl p-5 text-white">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+              <div>
+                <h3 class="font-bold text-sm text-white flex items-center gap-2">
+                  <i data-lucide="scale" class="w-4 h-4 text-emerald-400"></i> Karigar Weight & Shortage Logger
+                </h3>
+                <p class="text-[11px] text-slate-400">Munshi ji's metal weight reconciliation</p>
+              </div>
+              <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono">SS Loss Control</span>
+            </div>
+
+            <form id="jobwork-form" onsubmit="handleJobworkSubmit(event)" class="space-y-3 text-xs">
+              <div>
+                <label class="block text-slate-400 font-medium mb-1">Karigar / Polisher Name *</label>
+                <select id="jw-karigar" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500">
+                  <option value="Pappu Karigar">Pappu Karigar (Shed 4, Jagadhri)</option>
+                  <option value="Ramu Polisher">Ramu Polisher (Work Unit 2)</option>
+                  <option value="Bittu Buffing">Bittu Buffing Works</option>
+                  <option value="Shyam Lal Polishing">Shyam Lal Polishing</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-slate-400 font-medium mb-1">Utensil Item *</label>
+                <select id="jw-item" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500">
+                  <option value="Gilas 300ml">Gilas 300ml</option>
+                  <option value="Kadai No.10">Kadai No.10</option>
+                  <option value="Bhagona 8L">Bhagona 8L</option>
+                  <option value="Tope No.6">Tope No.6</option>
+                  <option value="Thali 12 inch">Thali 12 inch</option>
+                </select>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-slate-400 font-medium mb-1">Raw Weight Given (Kg) *</label>
+                  <input type="number" step="0.1" id="jw-weight-given" required oninput="calculateMetalLoss()" placeholder="e.g. 420.0" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 font-mono">
+                </div>
+                <div>
+                  <label class="block text-slate-400 font-medium mb-1">Pcs Received *</label>
+                  <input type="number" id="jw-pcs-received" required oninput="calculateMetalLoss()" placeholder="e.g. 1180" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 font-mono">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-slate-400 font-medium mb-1">Return Weight Weighed Back (Kg) *</label>
+                <input type="number" step="0.1" id="jw-weight-returned" required oninput="calculateMetalLoss()" placeholder="e.g. 414.0" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 font-mono">
+              </div>
+
+              <!-- Automated Shortage & Scrap Calculation Display -->
+              <div id="jw-calc-box" class="p-3 bg-slate-950 border border-slate-800 rounded-xl space-y-1 text-xs">
+                <div class="flex justify-between">
+                  <span class="text-slate-400">Metal Shrinkage / Shortage:</span>
+                  <span id="jw-shortage-val" class="font-mono font-bold text-amber-400">0.0 kg (0%)</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-400">Financial Impact (@ ₹300/kg SS):</span>
+                  <span id="jw-loss-val" class="font-mono font-bold text-red-400">₹0</span>
+                </div>
+                <div class="text-[10px] text-slate-500 pt-1">Normal grinding allowance: max 1.0%. Over-limit shortage gets flagged.</div>
+              </div>
+
+              <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+                <i data-lucide="save" class="w-4 h-4"></i> Log Job-Work Batch & Deduct Scrap
+              </button>
+            </form>
+          </div>
+
+          <!-- Karigar Ledger & Leakage History -->
+          <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-5 text-white">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+              <div>
+                <h3 class="font-bold text-sm text-white">Outside Polisher Reconciliations (WhatsApp Proof)</h3>
+                <p class="text-[11px] text-slate-400">Stops the "3-4% steel difference" audit shock that Suresh dismissed as casual wastage</p>
+              </div>
+              <span class="text-xs font-mono text-amber-400 bg-amber-400/10 px-2.5 py-1 rounded border border-amber-400/30">
+                Total Month Shortage: <strong id="total-shortage-kg">19.5 kg (₹5,850)</strong>
+              </span>
+            </div>
+
+            <div class="overflow-x-auto custom-scroll">
+              <table class="w-full text-left text-xs text-slate-300">
+                <thead class="bg-slate-950 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+                  <tr>
+                    <th class="py-2.5 px-3">Date</th>
+                    <th class="py-2.5 px-3">Karigar</th>
+                    <th class="py-2.5 px-3">Item</th>
+                    <th class="py-2.5 px-3">Issued (Kg)</th>
+                    <th class="py-2.5 px-3">Received (Pcs/Kg)</th>
+                    <th class="py-2.5 px-3">Variance / Shortage</th>
+                    <th class="py-2.5 px-3">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800 font-mono text-[11px]" id="jobwork-history-body">
+                  <!-- Dynamically injected -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MOBILE SIMULATOR CONTAINER (FOR TESTING RAMESH'S PHONE) -->
+    <!-- ============================================== -->
+    <div id="mobile-frame-wrapper" class="hidden py-4">
+      <div class="text-center mb-4">
+        <span class="text-xs font-semibold text-slate-400 bg-slate-800 px-3 py-1 rounded-full border border-slate-700">
+          📱 Simulating Ramesh's Budget 4G Phone on Shop Floor
+        </span>
+      </div>
+
+      <div class="mobile-screen bg-slate-950 text-white relative">
+        <!-- Phone Status Bar -->
+        <div class="bg-slate-900 px-5 py-2 flex items-center justify-between text-[11px] text-slate-400 border-b border-slate-800 font-mono">
+          <span>08:15 AM</span>
+          <div class="flex items-center gap-1.5">
+            <i data-lucide="wifi" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <i data-lucide="battery" class="w-3.5 h-3.5 text-slate-300"></i>
+          </div>
+        </div>
+
+        <!-- Phone App Bar -->
+        <div class="bg-blue-600 px-4 py-3 text-white flex items-center justify-between shadow">
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-sm tracking-tight">KarkhanaOS</span>
+            <span class="text-[10px] bg-blue-700 px-1.5 py-0.5 rounded font-mono">Ramesh View</span>
+          </div>
+          <button onclick="mobileQuickRefresh()" class="p-1 hover:bg-blue-700 rounded transition">
+            <i data-lucide="rotate-cw" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Mobile Scrollable Body -->
+        <div class="p-3 overflow-y-auto custom-scroll flex-1 space-y-3" id="mobile-cards-feed">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Mobile Bottom Nav -->
+        <div class="bg-slate-900 border-t border-slate-800 px-3 py-2 flex items-center justify-around text-[10px] text-slate-400">
+          <button onclick="mobileFilter('ready')" class="flex flex-col items-center text-blue-400 font-bold">
+            <i data-lucide="truck" class="w-4 h-4 mb-0.5"></i>
+            <span>Dispatch</span>
+          </button>
+          <button onclick="mobileFilter('polish')" class="flex flex-col items-center hover:text-white">
+            <i data-lucide="sparkles" class="w-4 h-4 mb-0.5"></i>
+            <span>Polish</span>
+          </button>
+          <button onclick="mobileFilter('hold')" class="flex flex-col items-center text-red-400 hover:text-red-300 font-semibold">
+            <i data-lucide="shield-alert" class="w-4 h-4 mb-0.5"></i>
+            <span>Hold (2)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Modal for Split / Partial Fulfillment Dispatch (Solves Mehra Kitchenware 180 of 300) -->
+  <div id="dispatch-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 text-white shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div>
+          <h3 class="font-bold text-base text-white">Record Tempo Dispatch</h3>
+          <p class="text-xs text-slate-400" id="modal-party-title">Mehra Kitchenware Jalandhar</p>
+        </div>
+        <button onclick="closeDispatchModal()" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="py-4 space-y-3 text-xs">
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+          <div class="flex justify-between text-slate-300">
+            <span>Item:</span>
+            <span class="font-bold text-white" id="modal-item-name">Kadai No.10</span>
+          </div>
+          <div class="flex justify-between text-slate-300 mt-1">
+            <span>Total Ordered:</span>
+            <span class="font-mono font-bold text-blue-400" id="modal-ordered-qty">300 pcs</span>
+          </div>
+          <div class="flex justify-between text-slate-300 mt-1">
+            <span>Already Dispatched:</span>
+            <span class="font-mono text-emerald-400" id="modal-already-disp">0 pcs</span>
+          </div>
+          <div class="flex justify-between text-slate-300 mt-1">
+            <span>Remaining to Dispatch:</span>
+            <span class="font-mono font-bold text-amber-400" id="modal-remaining-qty">300 pcs</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-medium mb-1">Pieces Loading in Tempo Right Now *</label>
+          <input type="number" id="modal-dispatch-input" value="180" class="w-full bg-slate-950 border border-blue-500 rounded-xl px-3 py-2.5 text-base font-bold text-white focus:outline-none font-mono">
+          <p class="text-[11px] text-slate-500 mt-1">Example: Type 180 to do partial dispatch. Remaining 120 will stay pending in polishing/packing.</p>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-medium mb-1">Transporter / Tempo No. / Driver</label>
+          <input type="text" id="modal-tempo-input" placeholder="e.g. HR-02-AB-4412 (Chhota Hathi)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs">
+        </div>
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button onclick="confirmDispatchAction()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow transition text-xs flex items-center justify-center gap-1.5">
+          <i data-lucide="check-check" class="w-4 h-4"></i> Confirm Loading & Print Challan
+        </button>
+        <button onclick="closeDispatchModal()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition text-xs">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 bg-blue-600 text-white text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 z-50 font-medium">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-300"></i>
+    <span id="toast-msg">Operation completed successfully</span>
+  </div>
+
+  <!-- Load JavaScript Logic -->
+  <script src="app.js"></script>
+</body>
+</html>

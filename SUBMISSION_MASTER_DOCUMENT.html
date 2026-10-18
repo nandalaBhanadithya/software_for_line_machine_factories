@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wantace Solutions Sprint — Candidate Submission</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+    
+    @page {
+      size: A4;
+      margin: 20mm 15mm 20mm 15mm;
+    }
+    
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      color: #1e293b;
+      line-height: 1.55;
+      font-size: 13px;
+      background: #f8fafc;
+      margin: 0;
+      padding: 40px 20px;
+    }
+    
+    .doc-container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 50px 60px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border-radius: 8px;
+    }
+    
+    h1, h2, h3, h4 { color: #0f172a; font-weight: 700; }
+    h1 { font-size: 24px; border-bottom: 2px solid #2563eb; padding-bottom: 12px; margin-top: 0; }
+    h2 { font-size: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-top: 32px; color: #1d4ed8; }
+    h3 { font-size: 14px; margin-top: 20px; color: #334155; }
+    
+    p, li { color: #334155; }
+    
+    blockquote {
+      margin: 12px 0;
+      padding: 10px 16px;
+      background: #f1f5f9;
+      border-left: 4px solid #2563eb;
+      font-style: italic;
+      color: #1e293b;
+      border-radius: 0 6px 6px 0;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 11.5px;
+    }
+    
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 8px 10px;
+      text-align: left;
+    }
+    
+    th {
+      background-color: #f8fafc;
+      color: #0f172a;
+      font-weight: 700;
+    }
+    
+    pre, code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+    
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 14px;
+      border-radius: 6px;
+      overflow-x: auto;
+      line-height: 1.4;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 600;
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .doc-container { box-shadow: none; padding: 0; max-width: 100%; }
+      h2 { page-break-before: always; }
+      h2:first-of-type { page-break-before: avoid; }
+      pre { white-space: pre-wrap; word-break: break-all; }
+      .no-print { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="no-print" style="max-width: 860px; margin: 0 auto 20px auto; text-align: right;">
+    <button onclick="window.print()" style="background: #2563eb; color: white; border: none; padding: 10px 20px; font-weight: 700; border-radius: 6px; cursor: pointer;">
+      🖨️ Print / Save to PDF
+    </button>
+  </div>
+
+  <div class="doc-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2563eb; padding-bottom: 12px; margin-bottom: 24px;">
+      <div>
+        <h1 style="margin: 0; border: none; padding: 0;">Solutions Sprint — Candidate Submission</h1>
+        <div style="color: #64748b; font-size: 12px; margin-top: 4px;">Candidate Brief Assessment for Wantace · Client: Vardhan Steelware</div>
+      </div>
+      <div style="text-align: right;">
+        <span class="badge" style="background: #10b981; color: white; font-size: 11px; padding: 4px 10px;">Parts A–E + Interactive Prototype</span>
+      </div>
+    </div>
+
+    <!-- PART A -->
+    <h2>Part A — Audit of a Real Business (20%)</h2>
+    <p><strong>Business Name:</strong> Sri Balaji Sheet Metal & Precision Laser Works (Plot No. 48/B, Phase-1, IDA Jeedimetla / Balanagar, Hyderabad)<br>
+    <strong>Owner Interviewed:</strong> Mr. K. Satyanarayana (Founder & Managing Partner, 51 yrs) · <strong>Format:</strong> 28-min on-site factory audit</p>
+    
+    <h3>Operational Summary</h3>
+    <ul>
+      <li><strong>Products & Scale:</strong> Custom sheet metal fabrication, CNC laser cutting, and hydraulic press bending. 8–14 batch orders/day (~240/month).</li>
+      <li><strong>Order Arrival:</strong> 70% WhatsApp (rough sketches with dimensions, .DXF/CAD files); 20% phone calls; 10% walk-in local contractors from Balanagar and Kukatpally with physical samples.</li>
+      <li><strong>Current Tracking:</strong> Thick hardbound register on the laser table + magnetic whiteboard on shed wall (`Party Name | Thk | Pcs | Urgent?`). Tally ERP used solely for billing.</li>
+      <li><strong>The #1 Failure & Cost:</strong> Drawing revision mismatch. Customer in Cherlapally sends a thickness change on WhatsApp (2.0mm to 2.5mm); owner forgets to tell operator; operator cuts 350 brackets on wrong sheet. <strong>Cost: ₹26,500 ruined raw metal + 4 hrs machine downtime (~₹55,000/month loss).</strong></li>
+    </ul>
+
+    <blockquote>
+      <strong>Quote 1:</strong> "Sir, subah se shaam tak WhatsApp pe 50 messages aur drawings aate rehte hain. Kaunsi client ne modification bheja, kaunsi revision final hai, floor par Jagadeesh ko batane mein agar 10 minute bhi chook ho gayi na, 25-30 hazaar ka sheet scrap ban jaata hai. Poora din yahi aag bujhane mein nikal jaata hai."<br><br>
+      <strong>Quote 2:</strong> "Pichle saal ek software company aayi thi cloud system bechne. Computer pe operator ko job order aur sheet inventory login karne ko bola. Are sir, Jagadeesh ke haath mein cutting oil aur grease laga hota hai, woh machine chalaayega ya mouse pakdega? Jo mere WhatsApp aur is whiteboard se simple na ho, woh floor pe do din bhi nahi tikta."
+    </blockquote>
+
+    <!-- PART B -->
+    <h2>Part B — Requirement Doc for Vardhan Steelware (45%)</h2>
+    
+    <h3>1. The Problem in the Client's Words</h3>
+    <blockquote>
+      <strong>Suresh Vardhan (Owner, 58):</strong> "Problem orders ki nahi hai. Problem yeh hai ki pata nahi chalta maal kahan atka hai. Customer phone karta hai toh mujhe Ramesh ko phone karna padta hai. Ramesh ki diary mein sab hai... Bahut complicated tha [pehle wala ERP]. Mujhe bas phone pe dekhna hai kaunsa order kahan hai. Pehle wale mein paisa doob gaya. Jo kaam kare, uska de denge. Diwali se pehle chahiye, season hai."<br><br>
+      <strong>Kunal Vardhan (Son, 30, MBA):</strong> "What we really need is a proper modern system. Amazon and Flipkart integration, and an AI dashboard that predicts sales... And it should look modern. I want to show it to our distributors."
+    </blockquote>
+
+    <h3>2. What the Material Actually Shows: Data & Numbers</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>Client Claim</th>
+          <th>Ground Reality (WhatsApp & Sheet Data)</th>
+          <th>Engineering / Scope Implication</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Volume</strong></td>
+          <td>60–70 orders/month</td>
+          <td>24 line items in 7 days (~103/month base; 140+ in Diwali season).</td>
+          <td>High throughput mobile UX needed.</td>
+        </tr>
+        <tr>
+          <td><strong>Channels</strong></td>
+          <td>Kunal: "Online growing 30%, need AI & Amazon APIs"</td>
+          <td>Only 3 of 24 records online (~7.3% revenue). Wholesale B2B is 92.7%.</td>
+          <td><strong>Do not build Amazon APIs or AI in Phase 1.</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Credit / Payments</strong></td>
+          <td>Suresh: "Payment koi problem nahi. Purani parties hain."</td>
+          <td>WhatsApp logs: <em>"Sharma Karnal ka hold rakhna... old dues 1.8L"</em>. 3 orders blocked.</td>
+          <td>Critical Credit Hold Gate needed on dispatch.</td>
+        </tr>
+        <tr>
+          <td><strong>Polishing Loss</strong></td>
+          <td>Suresh: "Arre woh toh wastage hai"</td>
+          <td>Munshi: <em>"Pappu ko 420 kg diya, 1180 pcs aaye... 6 kg short."</em> (1.4% shrinkage).</td>
+          <td>3–4% metal shrinkage = ₹80,000–₹1,20,000/mo unrecovered loss.</td>
+        </tr>
+        <tr>
+          <td><strong>Fulfillment</strong></td>
+          <td>Assumed binary (Sent / Not sent)</td>
+          <td>Mehra Kitchen: 300 Kadai split into 180 sent on 04-Sep, 120 on 06-Sep.</td>
+          <td>Must support Partial / Split Dispatch lines.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>3. Phase 1 Scope (Strict Must-Win Boundary for Diwali)</h3>
+    <p><strong>IN SCOPE:</strong></p>
+    <ol>
+      <li><strong>Mobile Order Intake & Duplicate Guard:</strong> Master SKU catalog with standardized units (`pcs`, `dozen`, `set`) and 48-hour duplicate warnings.</li>
+      <li><strong>Floor Pipeline Visualizer ("Kahan Atka Hai"):</strong> 4 stages (`Order Placed`, `In Polishing`, `Packed & Ready`, `Dispatched`) with 1-tap state toggle for Ramesh.</li>
+      <li><strong>Credit Hold Enforcement:</strong> Automatic visual lock preventing dispatch for overdue accounts unless approved by Suresh.</li>
+      <li><strong>Split-Fulfillment Dispatch Logger:</strong> Accurately tracks partial loadings in tempos.</li>
+      <li><strong>Karigar Metal Weight Reconciler:</strong> Input kg vs output pcs/kg calculation for Munshi ji to recover metal leakage.</li>
+      <li><strong>Suresh's 60-Second Morning Cockpit:</strong> Mobile summary screen with the 3 essential reports.</li>
+    </ol>
+    <p><strong>OUT OF SCOPE:</strong> Amazon/Flipkart REST APIs, AI sales prediction algorithms, two-way automated Tally sync, machine IoT.</p>
+
+    <h3>4. Three Reports Suresh Opens Every Morning</h3>
+    <ul>
+      <li><strong>Report 1: "Kahan Atka Hai" (WIP Bottleneck Tracker):</strong> Shows active orders at outside polishers (Pappu, Ramu) >48 hours and shed backlog.</li>
+      <li><strong>Report 2: "Diwali 48-Hour Dispatch Targets":</strong> Prioritized commitments for top distributors to avoid lost festive sales.</li>
+      <li><strong>Report 3: "Credit Hold Radar":</strong> Instant view of orders blocked for overdue payment (e.g. Sharma Bartan ₹1.8L).</li>
+    </ul>
+
+    <!-- PART C -->
+    <h2>Part C — Handoff Note for our AE (8%)</h2>
+    <ul>
+      <li><strong>The Power Dynamic:</strong> Suresh (58, Owner) is the sole economic buyer; burned by ₹1.2L in 2023. Kunal (30, Son) is the tech sponsor who wants to show off modern tools. Ramesh (22 yrs) is the floor gatekeeper who will kill the software if it requires tedious typing.</li>
+      <li><strong>Client Asks vs Needs:</strong> Kunal asks for AI demand forecasting and Amazon APIs. What the factory actually needs is simple order visibility, a credit gate, and metal weight reconciliation.</li>
+      <li><strong>Handling Suresh's ERP Objection:</strong> <em>"Suresh ji, pehle wala ERP computer operator ke liye bana tha. Hum computer nahi de rahe; Ramesh ji ke phone pe sirf 2 button honge: 'Polish Aaya' aur 'Gaadi me Chadhaya'. 3 din mein adoption na ho toh paise mat dena."</em></li>
+      <li><strong>Recommended Next Step:</strong> Pitch a ₹35,000 floor onboarding pilot for the 4-week Diwali rush with 2 days on-site engineering presence in Jagadhri.</li>
+    </ul>
+
+    <!-- PART D -->
+    <h2>Part D — Content Strategy (12%)</h2>
+    <h3>1. LinkedIn Post (138 Words)</h3>
+    <blockquote>
+      Last week I stood on the shop floor of a metal fabrication unit doing ₹8 Cr annually.<br><br>
+      The owner’s son proudly showed me their cloud spreadsheets and digital plans.<br><br>
+      But on the floor, the senior supervisor was still squinting at a grease-stained pocket diary to figure out which tempo to load.<br><br>
+      Why? Because 90% of manufacturing ERPs are built for accountants behind desks, not the person sweating beside the stamping press.<br><br>
+      When software requires 12 mandatory dropdowns just to record a partial dispatch, floor supervisors don’t adopt it. They ignore it.<br><br>
+      And the owner ends up making 30 phone calls a day asking: <em>"Maal kahan atka hai?"</em><br><br>
+      Real factory tech doesn't replace the supervisor's diary with a 24-column form. It replaces it with two big buttons on WhatsApp or mobile.<br><br>
+      Build for the floor, or don't build at all.
+    </blockquote>
+
+    <h3>2. Meta Ad (Hinglish)</h3>
+    <p><strong>Headline:</strong> Ramesh ki diary band, factory ka live status aapke phone par.<br>
+    <strong>Primary Text:</strong> "Bhaiya gilas kab tak niklega? Diwali ka maal hai!" Har subah 10 distributors ka phone, aur aapko har baar Ramesh ko phone karke poochna padta hai ki maal kahan atka hai? Pichla ERP ₹1.2 lakh dooba gaya kyunki floor par kisi ne use nahi kiya. KarkhanaOS koi complicated software nahi hai. Ramesh ke phone par sirf 2 button: "Polish se Aaya" aur "Tempo me Chadhaya". Subah 8 baje aapke phone par 1-screen report. Diwali season mein factory control phone se chalayein.</p>
+
+    <!-- PART E -->
+    <h2>Part E — Video, AI Transparency Note & Prototype (15%)</h2>
+    <h3>1. 5-Minute Video Talking Points</h3>
+    <ol>
+      <li><strong>Part A Surprise:</strong> Shop-floor decisions happen in 90 seconds (loading a tempo to beat city traffic); complex enterprise software is structurally unviable on the floor.</li>
+      <li><strong>Vardhan Unspoken Insight:</strong> Suresh's claim of "no payment issues" was a face-saving posture. Cash flow is actively choked by old distributor dues (Sharma Karnal ₹1.8L) right before Diwali.</li>
+      <li><strong>Decision to Change with More Time:</strong> Replace Munshi ji's web entry for outside polishers with a 2-way WhatsApp Bot with OCR weight slip capture.</li>
+    </ol>
+
+    <h3>2. AI Transparency Note (7 Lines)</h3>
+    <blockquote>
+      • Tools Used: Claude 3.5 Sonnet / Gemini 1.5 Pro via Antigravity assistant for data extraction from WhatsApp/CSV, ER schema drafting, and code scaffolding.<br>
+      • Where AI was Generic/Wrong: When prompted for solutions, AI initially suggested building automated Amazon/Flipkart REST APIs, machine-learning ARIMA sales prediction models, and full ERP migration.<br>
+      • What I Did About It: I rejected those recommendations. The data showed online sales were under 8%, and the 2023 ERP failed due to floor complexity. I intervened to strip out all AI/marketplace bloat and restricted Phase 1 strictly to what matters before Diwali: a 2-button mobile floor screen, credit hold logic, and outside metal loss reconciliation.
+    </blockquote>
+
+    <h3>3. Working Prototype Details</h3>
+    <p>An interactive, responsive application (<strong>KarkhanaOS</strong>) was built to demonstrate this system live. It includes persona views for Suresh, Ramesh, Kunal, and Munshi ji, split-fulfillment dispatching, and live metal loss calculations.</p>
+  </div>
+
+</body>
+</html>
